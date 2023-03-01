@@ -1,16 +1,44 @@
 import { useFormik } from "formik";
 import Link from "next/link";
-// import Input from "../../components/form/Input";
-// import Title from "../../components/ui/Title";
-// import { loginSchema } from "../../schema/login";
-import Input from "@/components/form/Input";
-import Title from "@/components/ui/Title";
-import { loginSchema } from "@/schema/login";
+import Input from "../../components/form/Input";
+import Title from "../../components/ui/Title";
+import { loginSchema } from "../../schema/login";
+import { getSession, signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
 const Login = () => {
+  const { data: session } = useSession();
+  const { push } = useRouter();
+  const [currentUser, setCurrentUser] = useState();
+
   const onSubmit = async (values, actions) => {
-    await new Promise((resolve) => setTimeout(resolve, 4000));
-    actions.resetForm();
+    const { email, password } = values;
+    let options = { redirect: false, email, password };
+    try {
+      const res = await signIn("credentials", options);
+      actions.resetForm();
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+        setCurrentUser(
+          res.data?.find((user) => user.email === session?.user?.email)
+        );
+        session && push("/profile/" + currentUser?._id);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUser();
+  }, [session, push, currentUser]);
+
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
       initialValues: {
@@ -60,11 +88,25 @@ const Login = () => {
           ))}
         </div>
         <div className="flex flex-col w-full gap-y-3 mt-6">
-          <button className="btn-primary">LOGIN</button>
-          <button className="btn-primary !bg-secondary">
-            <i className="fa fa-github mr-2 text-lg"></i>
-            GITHUB
+          <button className="btn-primary" type="submit">
+            LOGIN
           </button>
+          <div className="flex justify-center gap-5 w-full">
+            <button
+              className="btn-rounded"
+              type="button"
+              onClick={() => signIn("github")}
+            >
+              <i className="fa fa-github text-lg"></i>
+            </button>
+            <button
+              className="btn-rounded"
+              type="button"
+              onClick={() => signIn("google")}
+            >
+              <i className="fa fa-google text-lg"></i>
+            </button>
+          </div>
           <Link href="/auth/register">
             <span className="text-sm underline cursor-pointer text-secondary">
               Do you no have a account?
@@ -75,5 +117,25 @@ const Login = () => {
     </div>
   );
 };
+
+// If there is a session by the context parameter it receives from getServerSideProps, we make direct redirection.
+export async function getServerSideProps({ req }) {
+  const session = await getSession({ req });
+
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+  const user = res.data?.find((user) => user.email === session?.user.email);
+  if (session && user) {
+    return {
+      redirect: {
+        destination: "/profile/" + user._id,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}
 
 export default Login;

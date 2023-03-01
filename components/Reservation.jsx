@@ -3,6 +3,8 @@ import Input from "./form/Input";
 import Title from "./ui/Title";
 import { useFormik } from "formik";
 import { reservationSchema } from "@/schema/reservation";
+
+
 const Reservation = () => {
   const onSubmit = async (values, actions) => {
     await new Promise((resolve) => setTimeout(resolve, 4000));
@@ -21,6 +23,7 @@ const Reservation = () => {
       onSubmit,
       validationSchema: reservationSchema,
     });
+
   const inputs = [
     {
       id: 1,
@@ -62,13 +65,12 @@ const Reservation = () => {
       id: 5,
       name: "date",
       type: "datetime-local",
-      placeholder: "How Many Persons?",
       value: values.date,
       errorMessage: errors.date,
       touched: touched.date,
     },
   ];
-  console.log(values);
+
   return (
     <div className="container mx-auto py-12">
       <Title className="text-[40px] mb-10">Book A Table</Title>

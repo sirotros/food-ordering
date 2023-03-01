@@ -1,47 +1,53 @@
-import React from "react";
 import Title from "../ui/Title";
 
 const Order = () => {
   return (
     <div className="lg:p-8 flex-1 lg:mt-0 mt-5">
-      <Title className="text-[40px]">Password</Title>
+      <Title className="text-[40px]">Products</Title>
       <div className="overflow-x-auto w-full mt-5">
         <table className="w-full text-sm text-center text-gray-500 min-w-[1000px]">
           <thead className="text-xs text-gray-400 uppercase bg-gray-700">
             <tr>
               <th scope="col" className="py-3 px-6">
-                ID
+                PRODUCT ID
               </th>
               <th scope="col" className="py-3 px-6">
-                ADRESS
-              </th>
-              <th scope="col" className="py-3 px-6">
-                DATE
+                CUSTOMER
               </th>
               <th scope="col" className="py-3 px-6">
                 TOTAL
               </th>
               <th scope="col" className="py-3 px-6">
+                PAYMENT
+              </th>
+              <th scope="col" className="py-3 px-6">
                 STATUS
+              </th>
+              <th scope="col" className="py-3 px-6">
+                ACTION
               </th>
             </tr>
           </thead>
           <tbody>
             <tr className="transition-all bg-secondary border-gray-700 hover:bg-primary ">
-              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white flex items-center gap-x-1 justify-center">
-                <span>63107...</span>
+              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white gap-x-1 ">
+                63107...
               </td>
               <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                Adana
+                Emin Başbayan
               </td>
               <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                01-09-2022
+                $12
               </td>
+
               <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
-                $18
+                Cash
               </td>
               <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                 preparing
+              </td>
+              <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                <button className="btn-primary !bg-success">Next Stage</button>
               </td>
             </tr>
           </tbody>

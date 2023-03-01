@@ -1,10 +1,12 @@
+import React from "react";
 import Reservation from "@/components/Reservation";
 
-const index = () => {
+const Index = () => {
   return (
-    <div>
+    <React.Fragment>
       <Reservation />
-    </div>
+    </React.Fragment>
   );
 };
-export default index;
+
+export default Index;
