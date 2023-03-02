@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import bcrypt from "bcryptjs";
 
-
 const Login = () => {
   const { push } = useRouter();
 
@@ -89,9 +88,9 @@ const Login = () => {
   );
 };
 
-export const getServerSideProps = async (ctx) => {
+export const getServerSideProps = (ctx) => {
   const myCookie = ctx.req?.cookies || "";
-  if (myCookie.token === (await bcrypt.hash(process.env.ADMIN_PASSWORD, 10))) {
+  if (myCookie.token === process.env.ADMIN_TOKEN) {
     return {
       redirect: {
         destination: "/admin/profile",
