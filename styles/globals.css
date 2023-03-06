@@ -17,7 +17,7 @@ body {
   @apply text-white px-[30px] py-[8px] rounded-3xl bg-primary cursor-pointer hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed;
 }
 .btn-rounded {
-  @apply bg-secondary text-white w-10 h-10 flex justify-center items-center rounded-full;
+  @apply w-10 h-10 flex justify-center items-center rounded-full;
 }
 
 .slick-dots {
@@ -25,7 +25,7 @@ body {
 }
 
 .slick-dots .slick-active div {
-  @apply bg-primary;
+  @apply bg-primary scale-150;
 }
 
 .slick-dots div {

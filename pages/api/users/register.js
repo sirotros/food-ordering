@@ -21,8 +21,9 @@ const handler = async (req, res) => {
     await newUser.save();
     res.status(200).json(newUser);
     // set password to hashed
+    res.status(400).json({ message: "Something went wrong" })
   } catch (err) {
-    console.log(err);
+    toast.error(err)
   }
 };
 

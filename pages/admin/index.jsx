@@ -1,30 +1,26 @@
-import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
+import Head from "next/head";
 import Input from "@/components/form/Input";
 import Title from "@/components/ui/Title";
 import { adminSchema } from "@/schema/admin";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import bcrypt from "bcryptjs";
+import { api } from "@/api";
 
 const Login = () => {
   const { push } = useRouter();
 
   const onSubmit = async (values, actions) => {
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin`,
-        values
-      );
+      const res = await api.post(`/admin`, values);
       if (res.status === 200) {
-        console.log(res.data);
         actions.resetForm();
         toast.success("Admin Login Success!");
         push("/admin/profile");
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err.message);
     }
   };
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
@@ -60,6 +56,9 @@ const Login = () => {
 
   return (
     <div className="container mx-auto py-3">
+      <Head>
+        <title>Admin Login</title>
+      </Head>
       <form
         className="flex flex-col items-center my-20 md:w-1/2 w-full mx-auto"
         onSubmit={handleSubmit}

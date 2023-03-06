@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "@/api";
 import Head from "next/head";
 import Home from "./home";
 
@@ -6,8 +6,6 @@ export default function Index({ categoryList, productList }) {
   return (
     <div className="">
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"
@@ -21,10 +19,10 @@ export default function Index({ categoryList, productList }) {
 }
 
 export const getServerSideProps = async () => {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
+  const res = await api.get(`/categories`);
 
-  const product = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/products`
+  const product = await api.get(
+    `/products`
   );
 
   return {

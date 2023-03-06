@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "@/api";
 import Image from "next/image";
 
 const Order = ({ order }) => {
@@ -9,7 +9,7 @@ const Order = ({ order }) => {
     if (index - status === 1) return "animate-pulse";
     if (index - status > 1) return "";
   };
-  
+
   return (
     <div className="overflow-x-auto">
       <div className="min-h-[calc(100vh_-_433px)] flex  justify-center items-center flex-col p-10  min-w-[1000px]">
@@ -97,8 +97,8 @@ const Order = ({ order }) => {
 };
 
 export const getServerSideProps = async ({ params }) => {
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/orders/${params.id}`
+  const res = await api.get(
+    `/orders/${params.id}`
   );
 
   return {

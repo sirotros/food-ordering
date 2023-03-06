@@ -1,12 +1,13 @@
-import { useFormik } from "formik";
+import Head from "next/head";
 import Link from "next/link";
-import Input from "../../components/form/Input";
-import Title from "../../components/ui/Title";
-import { loginSchema } from "../../schema/login";
-import { getSession, signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import axios from "axios";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useFormik } from "formik";
+import { api } from "@/api";
+import Input from "@/components/form/Input";
+import Title from "@/components/ui/Title";
+import { loginSchema } from "@/schema/login";
+import { getSession, signIn, useSession } from "next-auth/react";
 
 const Login = () => {
   const { data: session } = useSession();
@@ -20,20 +21,20 @@ const Login = () => {
       const res = await signIn("credentials", options);
       actions.resetForm();
     } catch (err) {
-      console.log(err);
+      res.status(400).json({ message: "Something went wrong" });
     }
   };
 
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+        const res = await api.get(`/users`);
         setCurrentUser(
           res.data?.find((user) => user.email === session?.user?.email)
         );
         session && push("/profile/" + currentUser?._id);
       } catch (err) {
-        console.log(err);
+        res.status(400).json({ message: "Something went wrong" });
       }
     };
     getUser();
@@ -72,6 +73,14 @@ const Login = () => {
 
   return (
     <div className="container mx-auto">
+      <Head>
+        <title>Login</title>
+        <link
+          rel="shortcut icon"
+          href="https://www.svgrepo.com/show/421471/user-admin.svg"
+          type="image/x-icon"
+        />
+      </Head>
       <form
         className="flex flex-col items-center my-20 md:w-1/2 w-full mx-auto"
         onSubmit={handleSubmit}
@@ -91,22 +100,6 @@ const Login = () => {
           <button className="btn-primary" type="submit">
             LOGIN
           </button>
-          <div className="flex justify-center gap-5 w-full">
-            <button
-              className="btn-rounded"
-              type="button"
-              onClick={() => signIn("github")}
-            >
-              <i className="fa fa-github text-lg"></i>
-            </button>
-            <button
-              className="btn-rounded"
-              type="button"
-              onClick={() => signIn("google")}
-            >
-              <i className="fa fa-google text-lg"></i>
-            </button>
-          </div>
           <Link href="/auth/register">
             <span className="text-sm underline cursor-pointer text-secondary">
               Do you no have a account?
@@ -122,7 +115,7 @@ const Login = () => {
 export async function getServerSideProps({ req }) {
   const session = await getSession({ req });
 
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`);
+  const res = await api.get(`/users`);
   const user = res.data?.find((user) => user.email === session?.user.email);
   if (session && user) {
     return {

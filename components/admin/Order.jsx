@@ -1,46 +1,61 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
+import OrderDetail from "./OrderDetail";
 import Title from "../ui/Title";
+import { deleteAll } from "@/util";
+import { api } from "@/api";
+import { toast } from "react-toastify";
 
 const Order = () => {
+  const [isSearchModal, setIsSearchModal] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [order, setOrder] = useState([]);
   const status = ["preparing", "on the way", "delivered"];
+  console.log(orders)
   useEffect(() => {
     const getOrders = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/orders`
-        );
+        const res = await api.get(`/orders`);
         setOrders(res.data);
       } catch (err) {
-        console.log(err);
+        toast.error(err.message);
       }
     };
     getOrders();
-  }, [orders]);
+  }, []);
 
   const handleStatus = async (id) => {
     const item = orders.find((order) => order._id === id);
     const currentStatus = item.status;
-
     try {
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`,
-        {
-          status: currentStatus + 1,
-        }
-      );
+      const res = await api.put(`/orders/${id}`, {
+        status: currentStatus + 1,
+      });
       setOrders([res.data, ...orders.filter((order) => order._id !== id)]);
     } catch (err) {
-      console.log(err);
+      toast.error(err.message);
     }
+  };
+
+  const deleteAllOrders = async () => {
+    deleteAll("orders").then((res) => setOrders(res.data));
+  };
+
+  const handleOpenModal = (id) => {
+    const item = orders.find((order) => order._id === id);
+    setOrder(item);
+    setIsSearchModal(true);
   };
 
   return (
     <div className="lg:p-8 flex-1 lg:mt-0 mt-5">
-      <Title addClass="text-[40px]">Products</Title>
+      <div className="flex justify-between ">
+        <Title className="text-[40px]">Orders</Title>
+        <button className="btn-primary" onClick={deleteAllOrders}>
+          Clear Order
+        </button>
+      </div>
       <div className="overflow-x-auto w-full mt-5">
-        <table className="w-full text-sm text-center text-gray-500 min-w-[1000px]">
+        <table className="w-full text-sm text-center text-gray-500 xl:min-w-[1000px]">
           <thead className="text-xs text-gray-400 uppercase bg-gray-700">
             <tr>
               <th scope="col" className="py-3 px-6">
@@ -64,7 +79,8 @@ const Order = () => {
             </tr>
           </thead>
           <tbody>
-            {orders.length > 0 &&
+            {orders &&
+              orders.length > 0 &&
               orders
                 .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
                 .map((order) => (
@@ -88,9 +104,15 @@ const Order = () => {
                     <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
                       {status[order?.status]}
                     </td>
-                    <td className="py-4 px-6 font-medium whitespace-nowrap hover:text-white">
+                    <td className="flex items-center justify-center h-full py-4 px-6 font-medium whitespace-nowrap gap-5 hover:text-white">
                       <button
-                        className="btn-primary !bg-success"
+                        className="btn-primary"
+                        onClick={() => handleOpenModal(order?._id)}
+                      >
+                        Order Detail
+                      </button>
+                      <button
+                        className="btn-primary !bg-[#31aa75]"
                         onClick={() => handleStatus(order?._id)}
                         disabled={order?.status > 1}
                       >
@@ -102,6 +124,9 @@ const Order = () => {
           </tbody>
         </table>
       </div>
+      {isSearchModal && (
+        <OrderDetail order={order} setIsSearchModal={setIsSearchModal} />
+      )}
     </div>
   );
 };

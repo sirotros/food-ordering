@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import OutsideClickHandler from "react-outside-click-handler";
-import Title from "../ui/Title";
-import { GiCancel } from "react-icons/gi";
 import axios from "axios";
+import OutsideClickHandler from "react-outside-click-handler";
+import { GiCancel } from "react-icons/gi";
 import { toast } from "react-toastify";
+import Title from "../ui/Title";
+import { api } from "@/api";
 
 const AddProduct = ({ setIsProductModal }) => {
   const [file, setFile] = useState();
@@ -11,7 +12,7 @@ const AddProduct = ({ setIsProductModal }) => {
 
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [category, setCategory] = useState("pizza");
+  const [category, setCategory] = useState();
   const [prices, setPrices] = useState([]);
 
   const [extra, setExtra] = useState("");
@@ -19,18 +20,48 @@ const AddProduct = ({ setIsProductModal }) => {
 
   const [categories, setCategories] = useState([]);
 
+  const handleCreate = async () => {
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", "food-ordering");
+
+    try {
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/dpr8kjgdq/image/upload",
+        data
+      );
+
+      const { url } = uploadRes.data;
+      const newProduct = {
+        img: url,
+        title,
+        desc,
+        category: category.toLowerCase(),
+        prices,
+        extraOptions,
+      };
+      const res = await api.post(`/products`, newProduct);
+
+      if (res.status === 201) {
+        setIsProductModal(false);
+        toast.success("Product created successfully!");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
   useEffect(() => {
-    const getProducts = async () => {
+    const getCategories = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/categories`
-        );
+        const res = await api.get(`/categories`);
         setCategories(res.data);
+        setCategory(res?.data[0]?.title);
       } catch (err) {
-        console.log(err);
+        toast.error(err.message);
       }
     };
-    getProducts();
+    getCategories();
   }, []);
 
   const handleExtra = (e) => {
@@ -58,47 +89,12 @@ const AddProduct = ({ setIsProductModal }) => {
     setPrices(currentPrices);
   };
 
-  const handleCreate = async () => {
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", "food-ordering");
-
-    try {
-      const uploadRes = await axios.post(
-        "https://api.cloudinary.com/v1_1/bilgisayar-genetigi/image/upload",
-        data
-      );
-
-      const { url } = uploadRes.data;
-      const newProduct = {
-        img: url,
-        title,
-        desc,
-        category: category.toLowerCase(),
-        prices,
-        extraOptions,
-      };
-
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/products`,
-        newProduct
-      );
-
-      if (res.status === 201) {
-        setIsProductModal(false);
-        toast.success("Product created successfully!");
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   return (
     <div className="fixed top-0 left-0 w-screen h-screen z-50 after:content-[''] after:w-screen after:h-screen after:bg-white after:absolute after:top-0 after:left-0 after:opacity-60 grid place-content-center">
       <OutsideClickHandler onOutsideClick={() => setIsProductModal(false)}>
         <div className="w-full h-full grid place-content-center relative">
           <div className="relative z-50 md:w-[600px] w-[370px]  bg-white border-2 p-10 rounded-3xl">
-            <Title addClass="text-[40px] text-center">Add a New Product</Title>
+            <Title className="text-[40px] text-center">Add a New Product</Title>
 
             <div className="flex flex-col text-sm mt-6">
               <label className="flex gap-2 items-center">

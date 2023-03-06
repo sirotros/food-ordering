@@ -1,46 +1,38 @@
-import axios from "axios";
+import { api } from "@/api";
 import { useEffect, useState } from "react";
 import Input from "../form/Input";
 import Title from "../ui/Title";
+
 const Category = () => {
   const [inputText, setInputText] = useState("");
   const [categories, setCategories] = useState([]);
   useEffect(() => {
     const getCategories = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/categories`
-        );
+        const res = await api.get(`/categories`);
         setCategories(res?.data);
       } catch (err) {
-        console.log(err);
+        toast.error(err.message);
       }
     };
     getCategories();
-  }, [categories]);
-
+  }, []);
   const handleCreate = async (e) => {
     try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/categories`,
-        { title: inputText }
-      );
+      const res = await api.post(`/categories`, { title: inputText });
       setCategories([...categories, res.data]);
       setInputText("");
     } catch (err) {
-      console.log(err);
+      toast.error(err.message);
     }
   };
-
   const handleDelete = async (e, id) => {
     try {
       if (confirm("Are you sure you want to delete this category?")) {
-        await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_URL}/categories/${id}`
-        );
+        await api.delete(`/categories/${id}`);
       }
     } catch (err) {
-      console.log(err);
+      toast.error(err.message);
     }
   };
 
@@ -54,7 +46,11 @@ const Category = () => {
             onChange={(e) => setInputText(e.target.value)}
             value={inputText}
           />
-          <button type="submit" className="btn-primary  " onClick={handleCreate} >
+          <button
+            type="submit"
+            className="btn-primary  "
+            onClick={handleCreate}
+          >
             Add
           </button>
         </div>

@@ -1,5 +1,6 @@
 import Product from "@/models/Product";
 import dbConnect from "@/util/dbConnect";
+import { toast } from "react-toastify";
 
 const handler = async (req, res) => {
     await dbConnect();
@@ -12,8 +13,9 @@ const handler = async (req, res) => {
         try {
             const product = await Product.findById(id);
             res.status(200).json(product);
+            res.status(400).json({ message: "Product not found" })
         } catch (err) {
-            console.log(err);
+            toast.error(err)
         }
     }
 
@@ -21,8 +23,9 @@ const handler = async (req, res) => {
         try {
             const product = await Product.findByIdAndDelete(id);
             res.status(200).json(product);
+            res.status(400).json({ message: "Product could not be created" })
         } catch (err) {
-            console.log(err);
+            toast.error(err)
         }
     }
 };

@@ -13,8 +13,9 @@ const handler = async (req, res) => {
     try {
       const user = await User.findById(id);
       res.status(200).json(user);
+      res.status(400).json({ message: "Something went wrong" })
     } catch (err) {
-      console.log(err);
+      toast.error(err)
     }
   }
 
@@ -31,8 +32,9 @@ const handler = async (req, res) => {
         new: true,
       });
       res.status(200).json(users);
+      res.status(400).json({ message: "Something went wrong" })
     } catch (err) {
-      console.log(err);
+      toast.error(err)
     }
   }
 };

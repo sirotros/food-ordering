@@ -1,5 +1,4 @@
 import cookie from "cookie";
-import bcrypt from "bcryptjs";
 
 const handler = async (req, res) => {
   const { method } = req;
@@ -7,8 +6,7 @@ const handler = async (req, res) => {
   if (method === "POST") {
     const { username, password } = req.body;
     if (
-      username === process.env.ADMIN_USERNAME &&
-      password === process.env.ADMIN_PASSWORD
+      username === process.env.ADMIN_USERNAME && password === process.env.ADMIN_PASSWORD
     ) {
       res.setHeader(
         "Set-Cookie",
@@ -19,8 +17,9 @@ const handler = async (req, res) => {
         })
       );
       res.status(200).json({ message: "Success" });
-    } else {
       res.status(400).json({ message: "Wrong Credentials" });
+    } else {
+      res.status(400).json({ message: "Something Went Wrong. Please Try Again" });
     }
   }
 
@@ -33,7 +32,9 @@ const handler = async (req, res) => {
       })
     );
     res.status(200).json({ message: "Success" });
+    res.status(400).json({ message: "Something Went Wrong. Please Try Again" });
   }
 };
 
 export default handler;
+

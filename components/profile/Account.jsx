@@ -1,20 +1,20 @@
-import axios from "axios";
+import React from "react";
 import Input from "@/components/form/Input";
 import Title from "@/components/ui/Title";
-import { useFormik } from "formik";
 import { profileSchema } from "@/schema/profile";
+import { useFormik } from "formik";
+import { toast } from "react-toastify";
 
 const Account = ({ user }) => {
   const onSubmit = async (values, actions) => {
     try {
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`,
-        values
-      );
+      const res = await api.put(`/users/${user._id}`, values);
+      if (res.status === 200) {
+        toast.success("Profile updated successfully");
+      }
     } catch (err) {
-      console.log(err);
+      toast.error(err.message);
     }
-    actions.resetForm();
   };
 
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =

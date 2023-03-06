@@ -1,9 +1,7 @@
 import NextAuth from "next-auth";
 import GithubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
-import clientPromise from "../../../util/mongo";
+
 import User from "../../../models/User";
 import dbConnect from "../../../util/dbConnect";
 import bcrypt from "bcryptjs";
@@ -15,10 +13,6 @@ export default NextAuth({
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET
     }),
     CredentialsProvider({
       name: "Credentials",
@@ -40,7 +34,6 @@ export default NextAuth({
       },
     }),
   ],
- 
   pages: {
     signIn: "/auth/login",
   },

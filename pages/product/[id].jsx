@@ -1,9 +1,10 @@
 import Image from "next/image";
+import Head from "next/head";
 import { useState } from "react";
-import Title from "../../components/ui/Title";
-import { addProduct } from "../../redux/cartSlice";
+import Title from "@/components/ui/Title";
+import { addProduct } from "@/redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import { api } from "@/api";
 
 const Index = ({ food }) => {
   const [prices, setPrices] = useState(food.prices);
@@ -11,8 +12,6 @@ const Index = ({ food }) => {
   const [size, setSize] = useState(0);
   const [extraItems, setExtraItems] = useState(food?.extraOptions);
   const [extras, setExtras] = useState([]);
-  const cart = useSelector((state) => state.cart);
-
   const dispatch = useDispatch();
 
   const handleSize = (sizeIndex) => {
@@ -38,11 +37,14 @@ const Index = ({ food }) => {
   };
 
   const handleClick = () => {
-    dispatch(addProduct({ ...food, extras, price, quantity: 1 }));
+    dispatch(addProduct({ ...food, size, extras, price, quantity: 1 }));
   };
-
   return (
     <div className="flex items-center md:h-[calc(100vh_-_88px)] gap-5 py-20 flex-wrap ">
+      <Head>
+        <title> {food?.title} </title>
+        <link rel="shortcut icon" href={food?.img} type="image/x-icon" />
+      </Head>
       <div className="relative md:flex-1 md:w-[80%] md:h-[80%] w-36 h-36 mx-auto">
         <Image
           src={food?.img}
@@ -113,9 +115,7 @@ const Index = ({ food }) => {
 };
 
 export const getServerSideProps = async ({ params }) => {
-  const res = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/products/${params.id}`
-  );
+  const res = await api.get(`/products/${params.id}`);
 
   return {
     props: {

@@ -1,4 +1,3 @@
-import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -7,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import Account from "@/components/profile/Account";
 import Order from "@/components/profile/Order";
 import Password from "@/components/profile/Password";
+import { api } from "@/api";
 
 const Profile = ({ user }) => {
   const { data: session } = useSession();
@@ -25,7 +25,6 @@ const Profile = ({ user }) => {
       push("/auth/login");
     }
   }, [session, push]);
-
   return (
     <div className="flex px-10 min-h-[calc(100vh_-_433px)] lg:flex-row flex-col lg:mb-0 mb-10">
       <div className="lg:w-80 w-100 flex-shrink-0">
@@ -50,7 +49,7 @@ const Profile = ({ user }) => {
             <button className="ml-1 ">Account</button>
           </li>
           <li
-            className={`border w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all ${
+            className={`border border-t-0 w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all ${
               tabs === 1 && "bg-primary text-white"
             }`}
             onClick={() => setTabs(1)}
@@ -59,7 +58,7 @@ const Profile = ({ user }) => {
             <button className="ml-1">Password</button>
           </li>
           <li
-            className={`border w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all ${
+            className={`border border-t-0 w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all ${
               tabs === 2 && "bg-primary text-white"
             }`}
             onClick={() => setTabs(2)}
@@ -68,7 +67,7 @@ const Profile = ({ user }) => {
             <button className="ml-1">Orders</button>
           </li>
           <li
-            className={`border w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all`}
+            className={`border border-t-0 w-full p-3 cursor-pointer hover:bg-primary hover:text-white transition-all`}
             onClick={handleSignOut}
           >
             <i className="fa fa-sign-out"></i>
@@ -84,15 +83,11 @@ const Profile = ({ user }) => {
 };
 
 export async function getServerSideProps({ req, params }) {
-  const user = await axios.get(
-    `${process.env.NEXT_PUBLIC_API_URL}/users/${params.id}`
-  );
-
+  const user = await api.get(`/users/${params.id}`);
   return {
     props: {
       user: user ? user.data : null,
     },
   };
 }
-
 export default Profile;

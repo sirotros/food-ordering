@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import OutsideClickHandler from "react-outside-click-handler";
 import Title from "../ui/Title";
 import { GiCancel } from "react-icons/gi";
-import axios from "axios";
 import Input from "../form/Input";
 import { useRouter } from "next/router";
 import PacmanLoader from "react-spinners/PacmanLoader";
+import { api } from "@/api";
 
 const Search = ({ setIsSearchModal }) => {
   const [products, setProducts] = useState([]);
@@ -16,13 +16,13 @@ const Search = ({ setIsSearchModal }) => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/products`
+        const res = await api.get(
+          `/products`
         );
         setProducts(res.data);
         setFiltered(res.data.slice(0, 5));
       } catch (err) {
-        console.log(err);
+        toast.error(err.message);
       }
     };
     setTimeout(() => {
@@ -44,7 +44,7 @@ const Search = ({ setIsSearchModal }) => {
       <OutsideClickHandler onOutsideClick={() => setIsSearchModal(false)}>
         <div className="w-full h-full grid place-content-center relative">
           <div className="relative z-50 md:w-[600px] w-[370px]  bg-white border-2 p-10 rounded-3xl">
-            <Title addClass="text-[40px] text-center">Search</Title>
+            <Title className="text-[40px] text-center">Search</Title>
             <Input placeholder="Search..." onChange={handleSearch} />
             {products.length > 0 ? (
               <ul className="mt-4">

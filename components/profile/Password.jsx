@@ -1,15 +1,15 @@
-import axios from "axios";
 import Input from "@/components/form/Input";
 import Title from "@/components/ui/Title";
 import { useFormik } from "formik";
 import { newPasswordSchema } from "@/schema/newPassword";
 import { toast } from "react-toastify";
+import { api } from "@/api";
 
 const Password = ({ user }) => {
   const onSubmit = async (values, actions) => {
     try {
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`,
+      const res = await api.put(
+        `/users/${user._id}`,
         values
       );
       toast.success("Password updated successfully");

@@ -1,34 +1,87 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "@/components/form/Input";
 import Title from "@/components/ui/Title";
 import { useFormik } from "formik";
 import { footerSchema } from "@/schema/footer";
+import { toast } from "react-toastify";
 
 const Footer = () => {
-  const [iconName, setIconName] = useState("");
-  const [icons, setIcons] = useState([
-    "fa fa-facebook",
-    "fa fa-twitter",
-    "fa fa-instagram",
-  ]);
+  const [footerData, setFooterData] = useState([]);
+
+  useEffect(() => {
+    const getFooterData = async () => {
+      try {
+        const res = await api.get(`/footer`);
+        setFooterData(res.data[0]);
+      } catch (err) {
+        toast.error(err.message);
+      }
+    };
+    getFooterData();
+  }, []);
+
+  const updateFooterData = async (values, footerData) => {
+    try {
+      const res = await api.put(`/footer/${footerData._id}`, {
+        location: values.location,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        desc: values.desc,
+        openingHours: {
+          day: values.day,
+          hour: values.time,
+        },
+      });
+      if (res.status === 200) {
+        toast.success("Footer updated successfully");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const createFooterData = async (values) => {
+    try {
+      const res = await api.post(`/footer`, {
+        location: values.location,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        desc: values.desc,
+        openingHours: {
+          day: values.day,
+          hour: values.time,
+        },
+      });
+      if (res.status === 200) {
+        toast.success("Footer updated successfully");
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
   const onSubmit = async (values, actions) => {
-    await new Promise((resolve) => setTimeout(resolve, 4000));
-    actions.resetForm();
+    if (footerData) {
+      await updateFooterData(values, footerData);
+    } else {
+      createFooterData(values);
+    }
   };
 
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
     useFormik({
+      enableReinitialize: true,
       initialValues: {
-        location: "",
-        email: "",
-        phoneNumber: "",
-        desc: "",
-        day: "",
-        time: "",
+        location: footerData?.location,
+        email: footerData?.email,
+        phoneNumber: footerData?.phoneNumber,
+        desc: footerData?.desc,
+        day: footerData?.openingHours?.day,
+        time: footerData?.openingHours?.hour,
       },
       onSubmit,
       validationSchema: footerSchema,
     });
+
   const inputs = [
     {
       id: 1,
@@ -85,8 +138,9 @@ const Footer = () => {
       touched: touched.time,
     },
   ];
+
   return (
-    <form className="lg:p-8 flex-1 lg:mt-0 mt-5">
+    <form className="lg:p-8 flex-1 lg:mt-0 mt-5" onSubmit={handleSubmit}>
       <Title className="text-[40px]">Footer Settings</Title>
       <div className="grid lg:grid-cols-2 grid-cols-1 gap-4 mt-4">
         {inputs.map((input) => (
@@ -98,44 +152,9 @@ const Footer = () => {
           />
         ))}
       </div>
-      <div className="mt-4 flex justify-between md:items-center md:flex-row flex-col gap-4">
-        <div className="flex items-center gap-4">
-          <Input placeholder="Link Address" value="https://" onChange="" />
-          <Input
-            placeholder="Icon Name"
-            defaulValue="fa fa-"
-            onChange={(e) => setIconName(e.target.value)}
-            value={iconName}
-          />
-          <button
-            className="btn-primary"
-            type="button"
-            onClick={() => {
-              setIcons([...icons, iconName]);
-              setIconName("fa fa-");
-            }}
-          >
-            Add
-          </button>
-        </div>
-        <ul className="flex items-center gap-6">
-          {icons.map((icon, index) => (
-            <li key={index} className="flex items-center">
-              <i className={`${icon} text-2xl`}></i>
-              <button
-                className="text-danger"
-                onClick={() => {
-                  setIcons((prev) => prev.filter((item, i) => i !== index));
-                }}
-                type="button"
-              >
-                <i className="fa fa-trash text-xl ml-2"></i>
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <button className="btn-primary mt-4">Update</button>
+      <button className="btn-primary mt-4" type="submit">
+        Update
+      </button>
     </form>
   );
 };
