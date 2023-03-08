@@ -4,6 +4,7 @@ import Title from "@/components/ui/Title";
 import { profileSchema } from "@/schema/profile";
 import { useFormik } from "formik";
 import { toast } from "react-toastify";
+import { api } from "@/api";
 
 const Account = ({ user }) => {
   const onSubmit = async (values, actions) => {

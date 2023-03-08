@@ -1,6 +1,5 @@
 import Category from "@/models/Category";
 import dbConnect from "@/util/dbConnect";
-import { toast } from "react-toastify";
 
 const handler = async (req, res) => {
     await dbConnect();
@@ -15,8 +14,7 @@ const handler = async (req, res) => {
             res.status(200).json(category);
             res.status(400).json({ message: "Wrong Credentials" })
         } catch (err) {
-            toast.error(err)
-
+            console.error(err)
         }
     }
     if (method === "PUT") {
@@ -28,7 +26,7 @@ const handler = async (req, res) => {
             res.status(400).json({ message: "Something Went Wrong. Please Try Again" });
 
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
     if (method === "DELETE") {
@@ -38,7 +36,7 @@ const handler = async (req, res) => {
             res.status(400).json({ message: "Something Went Wrong. Please Try Again" });
 
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 };

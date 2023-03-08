@@ -1,6 +1,5 @@
 import Order from "@/models/Order";
 import dbConnect from "@/util/dbConnect";
-import { toast } from "react-toastify";
 
 const handler = async (req, res) => {
     await dbConnect();
@@ -12,7 +11,7 @@ const handler = async (req, res) => {
             res.status(200).json(orders);
             res.status(400).json({ message: "Order not found" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 
@@ -22,7 +21,7 @@ const handler = async (req, res) => {
             res.status(201).json(newOrder);
             res.status(400).json({ message: "Order could not be created" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 
@@ -32,7 +31,7 @@ const handler = async (req, res) => {
             res.status(200).json(orders);
             res.status(400).json({ message: "Order not deleted" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 };

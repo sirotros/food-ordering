@@ -14,7 +14,7 @@ const handler = async (req, res) => {
             res.status(200).json(order);
             res.status(400).json({ message: "Order not found. Please Try Again" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 
@@ -24,7 +24,7 @@ const handler = async (req, res) => {
             res.status(200).json(order);
             res.status(400).json({ message: "Order could not be deleted. Please Try Again" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 
@@ -36,7 +36,7 @@ const handler = async (req, res) => {
             res.status(200).json(order);
             res.status(400).json({ message: "order could not be updated. Please Try Again" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 };

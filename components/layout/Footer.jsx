@@ -8,9 +8,7 @@ const Footer = () => {
   useEffect(() => {
     const getFooter = async () => {
       try {
-        const res = await api.get(
-          `/footer`
-        );
+        const res = await api.get(`/footer`);
         setFooter(res.data[0]);
       } catch (err) {
         toast.error(err.message);
@@ -19,7 +17,7 @@ const Footer = () => {
     getFooter();
   }, []);
   return (
-    <div className="bg-secondary text-white">
+    <div className="bg-secondary text-white h-[24.063rem]">
       <div className="container mx-auto pt-16 pb-6">
         <div className="flex md:justify-between justify-center text-center flex-wrap md:gap-y-0 gap-y-6 ">
           <div className="md:flex-1">

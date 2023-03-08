@@ -14,7 +14,7 @@ const handler = async (req, res) => {
             res.status(200).json(footer);
             res.status(400).json({ message: "Something went wrong" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 
@@ -26,7 +26,7 @@ const handler = async (req, res) => {
             res.status(200).json(footer);
             res.status(400).json({ message: "Something went wrong" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 };

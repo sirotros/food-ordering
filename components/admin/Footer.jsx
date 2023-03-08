@@ -4,6 +4,7 @@ import Title from "@/components/ui/Title";
 import { useFormik } from "formik";
 import { footerSchema } from "@/schema/footer";
 import { toast } from "react-toastify";
+import { api } from "@/api";
 
 const Footer = () => {
   const [footerData, setFooterData] = useState([]);

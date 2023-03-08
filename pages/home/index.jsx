@@ -6,10 +6,8 @@ import Customers from "@/components/customers/Customers";
 import MenuWrapper from "@/components/product/MenuWrapper";
 import Reservation from "@/components/Reservation";
 import Head from "next/head";
-import { useSession } from "next-auth/react";
 
 const Index = ({ categoryList, productList }) => {
-  const { data } = useSession();
   return (
     <React.Fragment>
       <Head>

@@ -1,7 +1,7 @@
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import Layout from "@/layout/Layout";
+import Layout from "@/Layout/Layout";
 import store from "@/redux/store";
 import Router from "next/router";
 import NProgress from "nprogress";
@@ -26,7 +26,6 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
           <div className="pt-[88px]">
             <ToastContainer />
             <Component {...pageProps} />
-
           </div>
         </Layout>
       </Provider>

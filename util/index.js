@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import { api } from "@/api";
 export const deleteAll = async (url) => {
     try {
@@ -7,6 +6,6 @@ export const deleteAll = async (url) => {
         );
         return res.data
     } catch (err) {
-        toast.error(err.message);
+        console.error(err.message);
     }
 };

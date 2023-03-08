@@ -6,7 +6,7 @@ export const footerSchema = Yup.object({
     .required("Phone Number is required.")
     .min(10, "Phone number must be at least 10 characters."),
   email: Yup.string().required("Email is required.").email("Email is invalid."),
-  desc: Yup.string().required("Description is required."),
+  desc: Yup.string().min(50, "Description must be at least 50 characters.").max(250, "Description must be at most 250 characters.").required("Description is required."),
   day: Yup.string().required("Day is required."),
   time: Yup.string().required("Time is required."),
 });

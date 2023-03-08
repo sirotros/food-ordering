@@ -11,7 +11,7 @@ const handler = async (req, res) => {
       res.status(200).json(products);
       res.status(400).json({ message: "Products not found" })
     } catch (err) {
-      toast.error(err)
+      console.error(err)
     }
   }
 
@@ -21,7 +21,7 @@ const handler = async (req, res) => {
       res.status(201).json(newProduct);
       res.status(400).json({ message: "Products could not be created" })
     } catch (err) {
-      toast.error(err)
+      console.error(err)
     }
   }
   if (method === "DELETE") {
@@ -30,7 +30,7 @@ const handler = async (req, res) => {
       res.status(200).json(products);
       res.status(400).json({ message: "Products not deleted" })
     } catch (err) {
-      toast.error(err)
+      console.error(err)
     }
   }
 };

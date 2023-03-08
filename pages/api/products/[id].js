@@ -1,6 +1,5 @@
 import Product from "@/models/Product";
 import dbConnect from "@/util/dbConnect";
-import { toast } from "react-toastify";
 
 const handler = async (req, res) => {
     await dbConnect();
@@ -15,7 +14,7 @@ const handler = async (req, res) => {
             res.status(200).json(product);
             res.status(400).json({ message: "Product not found" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 
@@ -25,7 +24,7 @@ const handler = async (req, res) => {
             res.status(200).json(product);
             res.status(400).json({ message: "Product could not be created" })
         } catch (err) {
-            toast.error(err)
+            console.error(err)
         }
     }
 };

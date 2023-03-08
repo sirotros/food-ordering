@@ -10,7 +10,6 @@ const Order = () => {
   const [orders, setOrders] = useState([]);
   const [order, setOrder] = useState([]);
   const status = ["preparing", "on the way", "delivered"];
-  console.log(orders)
   useEffect(() => {
     const getOrders = async () => {
       try {
